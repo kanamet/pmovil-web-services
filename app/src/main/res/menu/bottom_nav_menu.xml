@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_authentication"
+        android:icon="@drawable/ic_authentication_option"
+        android:title="Authentication" />
+
+    <item
+        android:id="@+id/navigation_firestore"
+        android:icon="@drawable/ic_firestore_option"
+        android:title="Firestore" />
+
+    <item
+        android:id="@+id/navigation_storage"
+        android:icon="@drawable/ic_storage_option"
+        android:title="Storage" />
+
+</menu>
