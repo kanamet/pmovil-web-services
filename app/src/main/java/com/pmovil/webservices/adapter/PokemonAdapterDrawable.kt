@@ -1,4 +1,4 @@
-package com.pmovil.webservices.ui
+package com.pmovil.webservices.adapter
 
 import android.content.Context
 

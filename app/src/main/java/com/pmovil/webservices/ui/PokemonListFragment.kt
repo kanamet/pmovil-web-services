@@ -1,23 +1,27 @@
 package com.pmovil.webservices.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.pmovil.persistencia.interfaces.OnItemClickListener
-import com.pmovil.webservices.AppUtils
 import com.pmovil.webservices.R
+import com.pmovil.webservices.adapter.PokemonAdapterDrawable
 import com.pmovil.webservices.model.Pokemon
 import kotlinx.android.synthetic.main.fragment_pokemon_list.view.*
 
 
 class PokemonListFragment : Fragment() {
     private lateinit var mView: View
-    private var isAuthenticated = false
+
 
     companion object {
         private const val TAG = "PokemonListFragment"
-        const val REQUEST_LOG_IN = 100
+        const val RC_OPEN_DOCUMENT = 100
+        const val RC_CREATE_DOCUMENT = 200
     }
 
     override fun onCreateView(
@@ -26,9 +30,7 @@ class PokemonListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-
         mView = inflater.inflate(R.layout.fragment_pokemon_list, container, false)
-        mView.trainer_info.visibility = View.GONE
 
         loadDataLocal()
 
@@ -47,7 +49,51 @@ class PokemonListFragment : Fragment() {
     }
 
     private fun loadDataFirebase() {
+        // TODO Implement Logic
+    }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
+        // TODO Implement Logic
+    }
+
+
+    private fun onOpenDocumentResult(uri: Uri) {
+        // TODO Implement Logic
+    }
+
+    private fun onCreateDocumentResult(uri: Uri) {
+        // TODO Implement Logic
+    }
+
+    private fun getFilename(uri: Uri, defaultValue: String): String {
+        context?.contentResolver?.query(uri, null, null, null, null)?.use { cursor ->
+            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            cursor.moveToFirst().let {
+                return cursor.getString(nameIndex)
+            }
+        }
+
+        return defaultValue
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.menu_pokemon_list_fragment, menu)
+        return super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_option_export_to_firestore -> exportToFirestore()
+
+            R.id.menu_option_upload_file -> {
+                // TODO Implement Logic
+            }
+
+            R.id.menu_option_download_file -> {
+                // TODO Implement Logic
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private val mItemClickListener = object : OnItemClickListener<Pokemon> {
@@ -55,49 +101,21 @@ class PokemonListFragment : Fragment() {
         }
     }
 
-
-    private fun initLogIn() {
-
-    }
-
-    private fun initLogOut() {
-
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_main_activity, menu)
-
-        if (isAuthenticated) {
-            menu?.findItem(R.id.menu_option_log_in)?.isVisible = false
-        } else {
-            menu?.findItem(R.id.menu_option_log_out)?.isVisible = false
-        }
-
-        return super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_option_log_in -> initLogIn()
-            R.id.menu_option_log_out -> initLogOut()
-            R.id.menu_option_export_to_firestore -> exportToFirestore()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun exportToFirestore() {
-        AppUtils.showSnackbar(mView, "Data exported to Firestore")
-    }
+/*
+        val db = FirebaseFirestore.getInstance()
 
-    private fun setAuthenticationStatus(isAuthenticated: Boolean) {
-        this.isAuthenticated = isAuthenticated
-        setHasOptionsMenu(true)
-
-        if (isAuthenticated) {
-            mView.trainer_info.visibility = View.VISIBLE
-        } else {
-            mView.trainer_info.visibility = View.GONE
+        getPokemonList().forEach {
+            db.collection("pokemon").document("%03d".format(it.number)).set(it)
         }
+
+        getPokemonListExtra().forEach {
+            db.collection("pokemon").document("%03d".format(it.number)).set(it)
+        }
+
+        AppUtils.showSnackbar(mView, "Data exported to Firestore")
+
+*/
     }
 
     private fun getPokemonList(): ArrayList<Pokemon> {

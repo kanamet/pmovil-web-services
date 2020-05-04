@@ -1,4 +1,4 @@
-package com.pmovil.webservices.ui
+package com.pmovil.webservices.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -32,8 +32,6 @@ abstract class PokemonAdapter(val context: Context) :
     }
 
     override fun getItemCount(): Int = data.size
-
-
 
     class PokemonViewHolder(
         val view: View,

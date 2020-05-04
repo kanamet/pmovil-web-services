@@ -1,119 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="8dp">
-
-    <TextView
-        style="@style/section_title_style"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="User information" />
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp">
+        android:orientation="vertical"
+        android:padding="8dp">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
-            android:text="Display Name:"
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/display_name_txt"
+            style="@style/section_title_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Ash Ketchum" />
+            android:text="User information" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:text="Display Name:"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/user_display_name_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Ash Ketchum" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:text="Email:"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/user_email_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="ash_ketchum@pokemon.com" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:text="Status:"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/user_status_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="User is not Identified" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:text="UID:"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/user_uid_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="User is not Identified" />
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/section_title_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Email and Password" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/user_email_input_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/user_password_input_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/create_user_email_password_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Create user" />
+
+            <Button
+                android:id="@+id/authenticate_email_password_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Authenticate" />
+
+            <Button
+                android:id="@+id/sing_out_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Sing Out" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/section_title_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="External Service - Google" />
+
+        <Button
+            android:id="@+id/authenticate_external_service_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Authenticate" />
+
+        <TextView
+            style="@style/section_title_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Anonymous" />
+
+        <Button
+            android:id="@+id/authenticate_anonymous_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Authenticate" />
+
+        <TextView
+            style="@style/section_title_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Firebase Authentication UI" />
+
+        <Button
+            android:id="@+id/authenticate_firebase_ui_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Authenticate" />
 
     </LinearLayout>
 
-    <TextView
-        style="@style/section_title_style"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Email and Password" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/user_email_input_txt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/user_password_input_txt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Pasword"
-            android:inputType="textVisiblePassword" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
-        android:id="@+id/create_user_email_password_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Create user" />
-
-    <Button
-        android:id="@+id/authenticate_email_password_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Authenticate" />
-
-    <TextView
-        style="@style/section_title_style"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="External Service - Google" />
-
-    <Button
-        android:id="@+id/authenticate_external_service_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Authenticate" />
-
-    <TextView
-        style="@style/section_title_style"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Anonymous" />
-
-    <Button
-        android:id="@+id/authenticate_anonymous_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Authenticate" />
-
-    <TextView
-        style="@style/section_title_style"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Firebase Authentication UI" />
-
-    <Button
-        android:id="@+id/authenticate_firebase_ui_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Authenticate" />
-
-</LinearLayout>
+</ScrollView>
