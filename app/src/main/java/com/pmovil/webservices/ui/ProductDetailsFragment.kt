@@ -7,8 +7,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.firestore.FirebaseFirestore
 import com.pmovil.webservices.R
 import com.pmovil.webservices.dao.ProductDAO
+import com.pmovil.webservices.dao.ProductDAODatabase
+import com.pmovil.webservices.dao.ProductDAOFirestore
+import com.pmovil.webservices.database.AppCollections
 import com.pmovil.webservices.database.AppDatabase
 import com.pmovil.webservices.model.Product
 import kotlinx.android.synthetic.main.fragment_product_details.view.*
@@ -17,7 +21,8 @@ class ProductDetailsFragment : Fragment() {
 
     private lateinit var mView: View
     private lateinit var db: AppDatabase
-    private lateinit var productDAO : ProductDAO
+    private lateinit var productDAO: ProductDAO
+    private lateinit var firebaseFirestore: FirebaseFirestore
 
     private lateinit var mAction: String
 
@@ -32,7 +37,10 @@ class ProductDetailsFragment : Fragment() {
         mView.delete_product_btn.setOnClickListener { deleteProduct() }
 
         db = AppDatabase.getInstance(context)
-        productDAO = db.productDAO()
+//        productDAO = db.productDAO()
+
+        firebaseFirestore = FirebaseFirestore.getInstance()
+        productDAO = ProductDAOFirestore(firebaseFirestore)
 
         arguments?.apply {
             mAction = getString("action", "")
@@ -45,13 +53,27 @@ class ProductDetailsFragment : Fragment() {
     }
 
     private fun loadProduct(productCode: Int) {
-        val product = productDAO.findByCode(productCode)
+        if (productDAO is ProductDAODatabase) {
 
-        mView.product_code_text.setText("${product.code}")
-        mView.product_name_text.setText(product.name)
-        mView.product_description_text.setText(product.description)
-        mView.product_quantity_text.setText("${product.quantity}")
-        mView.product_price_text.setText("${product.price}")
+            updateUI(productDAO.findByCode(productCode))
+
+        } else if (productDAO is ProductDAOFirestore) {
+
+            firebaseFirestore.collection(AppCollections.PRODUCT)
+                .document(productCode.toString()).get()
+                .addOnSuccessListener { document ->
+                    updateUI(document.toObject(Product::class.java))
+                }
+
+        }
+    }
+
+    private fun updateUI(product: Product?) {
+        mView.product_code_text.setText("${product?.code}")
+        mView.product_name_text.setText(product?.name)
+        mView.product_description_text.setText(product?.description)
+        mView.product_quantity_text.setText("${product?.quantity}")
+        mView.product_price_text.setText("${product?.price}")
     }
 
     private fun saveProduct() {

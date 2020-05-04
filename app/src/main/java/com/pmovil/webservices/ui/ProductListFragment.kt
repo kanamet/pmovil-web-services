@@ -9,9 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.FirebaseFirestore
 import com.pmovil.persistencia.interfaces.OnItemClickListener
 import com.pmovil.webservices.R
 import com.pmovil.webservices.dao.ProductDAO
+import com.pmovil.webservices.dao.ProductDAODatabase
+import com.pmovil.webservices.dao.ProductDAOFirestore
+import com.pmovil.webservices.database.AppCollections
 import com.pmovil.webservices.database.AppDatabase
 import com.pmovil.webservices.model.Product
 import kotlinx.android.synthetic.main.fragment_product_list.view.*
@@ -25,7 +29,8 @@ class ProductListFragment : Fragment() {
 
     private lateinit var mView: View
     private lateinit var db: AppDatabase
-    private lateinit var productDAO : ProductDAO
+    private lateinit var productDAO: ProductDAO
+    private lateinit var firebaseFirestore: FirebaseFirestore
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +43,10 @@ class ProductListFragment : Fragment() {
         mView.add_item_btn.setOnClickListener { addProduct() }
 
         db = AppDatabase.getInstance(context)
-        productDAO = db.productDAO()
+//        productDAO = db.productDAO()
+
+        firebaseFirestore = FirebaseFirestore.getInstance()
+        productDAO = ProductDAOFirestore(firebaseFirestore)
 
         loadProducts()
 
@@ -46,8 +54,21 @@ class ProductListFragment : Fragment() {
     }
 
     private fun loadProducts() {
-        val productsList = productDAO.getAll()
+        if (productDAO is ProductDAODatabase) {
 
+            loadProducts(productDAO.getAll())
+
+        } else if (productDAO is ProductDAOFirestore) {
+
+            firebaseFirestore.collection(AppCollections.PRODUCT).get()
+                .addOnSuccessListener { document ->
+                    loadProducts(document.toObjects(Product::class.java))
+                }
+
+        }
+    }
+
+    private fun loadProducts(productsList: List<Product>) {
         val productAdapter = ProductAdapter()
         productAdapter.data = productsList
         productAdapter.onItemClickListener = onItemClickListener
