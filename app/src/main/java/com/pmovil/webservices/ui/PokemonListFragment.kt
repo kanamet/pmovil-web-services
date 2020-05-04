@@ -1,23 +1,37 @@
 package com.pmovil.webservices.ui
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.pmovil.persistencia.interfaces.OnItemClickListener
 import com.pmovil.webservices.AppUtils
 import com.pmovil.webservices.R
+import com.pmovil.webservices.adapter.PokemonAdapterDrawable
+import com.pmovil.webservices.adapter.PokemonAdapterFirebase
+import com.pmovil.webservices.database.AppCollection
 import com.pmovil.webservices.model.Pokemon
 import kotlinx.android.synthetic.main.fragment_pokemon_list.view.*
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
 
 
 class PokemonListFragment : Fragment() {
     private lateinit var mView: View
-    private var isAuthenticated = false
+
+    private lateinit var firebaseStorage: FirebaseStorage
 
     companion object {
         private const val TAG = "PokemonListFragment"
-        const val REQUEST_LOG_IN = 100
+        const val RC_OPEN_DOCUMENT = 100
+        const val RC_CREATE_DOCUMENT = 200
     }
 
     override fun onCreateView(
@@ -26,11 +40,12 @@ class PokemonListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-
         mView = inflater.inflate(R.layout.fragment_pokemon_list, container, false)
-        mView.trainer_info.visibility = View.GONE
 
-        loadDataLocal()
+//        loadDataLocal()
+
+        firebaseStorage = FirebaseStorage.getInstance()
+        loadDataFirebase()
 
         return mView
     }
@@ -47,7 +62,107 @@ class PokemonListFragment : Fragment() {
     }
 
     private fun loadDataFirebase() {
+        val db = FirebaseFirestore.getInstance()
+        db.collection(AppCollection.POKEMON).get()
+            .addOnSuccessListener { document ->
+                val pokemonList = document.toObjects(Pokemon::class.java)
+                val pokemonAdapter = PokemonAdapterFirebase(requireContext())
 
+                pokemonAdapter.data = pokemonList
+                pokemonAdapter.onItemClickListener = mItemClickListener
+
+                mView.recyclerView.adapter = pokemonAdapter
+                mView.recyclerView.layoutManager = GridLayoutManager(context, 2)
+            }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
+        if (requestCode == RC_OPEN_DOCUMENT && resultCode == Activity.RESULT_OK) {
+            resultData?.data?.also { uri ->
+                Log.i(TAG, "Uri: $uri")
+                onOpenDocumentResult(uri);
+            }
+        }
+
+        if (requestCode == RC_CREATE_DOCUMENT) {
+            resultData?.data?.also { uri ->
+                Log.i(TAG, "Uri: $uri")
+                onCreateDocumentResult(uri)
+            }
+        }
+    }
+
+    private fun onOpenDocumentResult(uri: Uri) {
+        try {
+            val fileName = getFilename(uri, "document")
+            firebaseStorage.reference
+                .child("documents/$fileName")
+                .putFile(uri)
+            AppUtils.showToast(context, "Filename: $fileName")
+        } catch (e: FileNotFoundException) {
+            Log.i(TAG, "${e.message}")
+            e.printStackTrace()
+        }
+    }
+
+    private fun onCreateDocumentResult(uri: Uri) {
+        firebaseStorage.reference
+            .child("pokemon001.png")
+            .getStream { taskSnapshot, inputStream ->
+                context?.contentResolver?.openFileDescriptor(uri, "w")?.use {
+                    FileOutputStream(it.fileDescriptor).use { outputStream ->
+                        val buffer = ByteArray(4096)
+                        var bytesRead = inputStream.read(buffer)
+
+                        while (bytesRead != -1) {
+                            outputStream.write(buffer)
+                            bytesRead = inputStream.read(buffer)
+                        }
+                    }
+                }
+            }
+    }
+
+    private fun getFilename(uri: Uri, defaultValue: String): String {
+        context?.contentResolver?.query(uri, null, null, null, null)?.use { cursor ->
+            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            cursor.moveToFirst().let {
+                return cursor.getString(nameIndex)
+            }
+        }
+
+        return defaultValue
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.menu_pokemon_list_fragment, menu)
+        return super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_option_export_to_firestore -> exportToFirestore()
+
+            R.id.menu_option_upload_file -> {
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "image/*"
+                }
+
+                startActivityForResult(intent, RC_OPEN_DOCUMENT)
+            }
+
+            R.id.menu_option_download_file -> {
+                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "image/png"
+                    putExtra(Intent.EXTRA_TITLE, "pokemon001.png")
+                }
+
+                startActivityForResult(intent, RC_CREATE_DOCUMENT)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private val mItemClickListener = object : OnItemClickListener<Pokemon> {
@@ -55,49 +170,19 @@ class PokemonListFragment : Fragment() {
         }
     }
 
-
-    private fun initLogIn() {
-
-    }
-
-    private fun initLogOut() {
-
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_main_activity, menu)
-
-        if (isAuthenticated) {
-            menu?.findItem(R.id.menu_option_log_in)?.isVisible = false
-        } else {
-            menu?.findItem(R.id.menu_option_log_out)?.isVisible = false
-        }
-
-        return super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_option_log_in -> initLogIn()
-            R.id.menu_option_log_out -> initLogOut()
-            R.id.menu_option_export_to_firestore -> exportToFirestore()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun exportToFirestore() {
-        AppUtils.showSnackbar(mView, "Data exported to Firestore")
-    }
+        val db = FirebaseFirestore.getInstance()
 
-    private fun setAuthenticationStatus(isAuthenticated: Boolean) {
-        this.isAuthenticated = isAuthenticated
-        setHasOptionsMenu(true)
-
-        if (isAuthenticated) {
-            mView.trainer_info.visibility = View.VISIBLE
-        } else {
-            mView.trainer_info.visibility = View.GONE
+        getPokemonList().forEach {
+            db.collection("pokemon").document("%03d".format(it.number)).set(it)
         }
+
+        getPokemonListExtra().forEach {
+            db.collection("pokemon").document("%03d".format(it.number)).set(it)
+        }
+
+        AppUtils.showSnackbar(mView, "Data exported to Firestore")
+
     }
 
     private fun getPokemonList(): ArrayList<Pokemon> {

@@ -2,12 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_option_log_in"
-        android:title="Log In" />
-    <item
-        android:id="@+id/menu_option_log_out"
-        android:title="Log Out" />
-    <item
         android:id="@+id/menu_option_export_to_firestore"
         android:title="Export to Firestore" />
+
+    <item
+        android:id="@+id/menu_option_upload_file"
+        android:title="Upload File" />
+
+    <item
+        android:id="@+id/menu_option_download_file"
+        android:title="Download File" />
 </menu>

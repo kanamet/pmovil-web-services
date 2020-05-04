@@ -15,7 +15,7 @@ import com.pmovil.webservices.R
 import com.pmovil.webservices.dao.ProductDAO
 import com.pmovil.webservices.dao.ProductDAODatabase
 import com.pmovil.webservices.dao.ProductDAOFirestore
-import com.pmovil.webservices.database.AppCollections
+import com.pmovil.webservices.database.AppCollection
 import com.pmovil.webservices.database.AppDatabase
 import com.pmovil.webservices.model.Product
 import kotlinx.android.synthetic.main.fragment_product_list.view.*
@@ -60,7 +60,7 @@ class ProductListFragment : Fragment() {
 
         } else if (productDAO is ProductDAOFirestore) {
 
-            firebaseFirestore.collection(AppCollections.PRODUCT).get()
+            firebaseFirestore.collection(AppCollection.PRODUCT).get()
                 .addOnSuccessListener { document ->
                     loadProducts(document.toObjects(Product::class.java))
                 }
@@ -105,7 +105,7 @@ class ProductListFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_fragment_product, menu)
+        inflater?.inflate(R.menu.menu_product_fragment, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

@@ -1,7 +1,8 @@
 package com.pmovil.webservices.database
 
-class AppCollections {
+class AppCollection {
     companion object {
         const val PRODUCT = "product"
+        const val POKEMON = "pokemon"
     }
 }

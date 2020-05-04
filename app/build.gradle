@@ -51,6 +51,10 @@ dependencies {
     // Firebase Firestore
     implementation 'com.google.firebase:firebase-firestore-ktx:21.2.1'
 
+    // Firebase Storage
+    implementation 'com.google.firebase:firebase-storage-ktx:19.1.0'
+    implementation 'com.firebaseui:firebase-ui-storage:4.3.1'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'

@@ -12,7 +12,7 @@ import com.pmovil.webservices.R
 import com.pmovil.webservices.dao.ProductDAO
 import com.pmovil.webservices.dao.ProductDAODatabase
 import com.pmovil.webservices.dao.ProductDAOFirestore
-import com.pmovil.webservices.database.AppCollections
+import com.pmovil.webservices.database.AppCollection
 import com.pmovil.webservices.database.AppDatabase
 import com.pmovil.webservices.model.Product
 import kotlinx.android.synthetic.main.fragment_product_details.view.*
@@ -59,7 +59,7 @@ class ProductDetailsFragment : Fragment() {
 
         } else if (productDAO is ProductDAOFirestore) {
 
-            firebaseFirestore.collection(AppCollections.PRODUCT)
+            firebaseFirestore.collection(AppCollection.PRODUCT)
                 .document(productCode.toString()).get()
                 .addOnSuccessListener { document ->
                     updateUI(document.toObject(Product::class.java))

@@ -3,7 +3,7 @@ package com.pmovil.webservices.dao
 import android.util.Log
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.pmovil.webservices.database.AppCollections
+import com.pmovil.webservices.database.AppCollection
 import com.pmovil.webservices.model.Product
 
 class ProductDAOFirestore(val firestore: FirebaseFirestore) : ProductDAO {
@@ -15,7 +15,7 @@ class ProductDAOFirestore(val firestore: FirebaseFirestore) : ProductDAO {
     }
 
     init {
-        mCollection = firestore.collection(AppCollections.PRODUCT)
+        mCollection = firestore.collection(AppCollection.PRODUCT)
     }
 
     override fun getAll(): List<Product> {
@@ -53,7 +53,7 @@ class ProductDAOFirestore(val firestore: FirebaseFirestore) : ProductDAO {
     }
 
     override fun deleteAll() {
-        firestore.collection(AppCollections.PRODUCT).get()
+        firestore.collection(AppCollection.PRODUCT).get()
             .addOnSuccessListener {
                 it.documents.forEach {
                     it.reference.delete()
