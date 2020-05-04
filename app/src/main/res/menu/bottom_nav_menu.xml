@@ -12,7 +12,7 @@
         android:title="Firestore" />
 
     <item
-        android:id="@+id/navigation_storage"
+        android:id="@+id/navigation_pokemon_list"
         android:icon="@drawable/ic_storage_option"
         android:title="Storage" />
 

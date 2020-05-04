@@ -90,7 +90,7 @@ class ProductListFragment : Fragment() {
             "action" to "ADD_PRODUCT"
         )
 
-        findNavController().navigate(R.id.navifation_product_details, bundle)
+        findNavController().navigate(R.id.navigation_product_details, bundle)
     }
 
     private val onItemClickListener = object : OnItemClickListener<Product> {
@@ -100,7 +100,7 @@ class ProductListFragment : Fragment() {
                 "product_code" to product.code
             )
 
-            findNavController().navigate(R.id.navifation_product_details, bundle)
+            findNavController().navigate(R.id.navigation_product_details, bundle)
         }
     }
 

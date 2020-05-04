@@ -33,8 +33,6 @@ abstract class PokemonAdapter(val context: Context) :
 
     override fun getItemCount(): Int = data.size
 
-
-
     class PokemonViewHolder(
         val view: View,
         val numberTxt: TextView,

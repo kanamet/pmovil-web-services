@@ -6,7 +6,7 @@
     app:startDestination="@id/navigation_authentication">
 
     <fragment
-        android:id="@+id/pokemonListFragment"
+        android:id="@+id/navigation_pokemon_list"
         android:name="com.pmovil.webservices.ui.PokemonListFragment"
         android:label="PokemonListFragment"
         tools:layout="@layout/fragment_pokemon_list" />
@@ -18,18 +18,18 @@
         tools:layout="@layout/fragment_authentication" />
 
     <fragment
-        android:id="@+id/navifation_product_details"
+        android:id="@+id/navigation_product_details"
         android:name="com.pmovil.webservices.ui.ProductDetailsFragment"
-        android:label="Product Details"
+        android:label="ProductDetailsFragment"
         tools:layout="@layout/fragment_product_details" />
 
     <fragment
         android:id="@+id/navigation_product_list"
         android:name="com.pmovil.webservices.ui.ProductListFragment"
-        android:label="Product List"
+        android:label="ProductListFragment"
         tools:layout="@layout/fragment_product_list">
         <action
             android:id="@+id/action_nav_product_list_to_nav_product_details"
-            app:destination="@id/navifation_product_details" />
+            app:destination="@id/navigation_product_details" />
     </fragment>
 </navigation>
