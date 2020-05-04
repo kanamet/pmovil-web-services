@@ -13,7 +13,7 @@ class AppUtils {
 
         fun showSnackbarCloseable(view: View?, message: String) {
             view?.let {
-                Snackbar.make(it, message, Snackbar.LENGTH_SHORT)
+                Snackbar.make(it, message, Snackbar.LENGTH_INDEFINITE)
                     .setAction("CLOSE", {})
                     .show()
             }
